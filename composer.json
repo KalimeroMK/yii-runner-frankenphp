@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "8.1 - 8.4",
+        "php": "8.1 - 8.5",
         "ext-frankenphp": "*",
         "psr/container": "^2.0",
         "psr/http-factory": "^1.0",

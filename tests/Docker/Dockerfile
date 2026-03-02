@@ -1,6 +1,6 @@
+ARG PHP_VERSION
 FROM composer/composer:2-bin AS composer
 
-ARG PHP_VERSION
 FROM dunglas/frankenphp:1-php${PHP_VERSION}-bookworm
 
 RUN apt update && apt -y install \
@@ -28,4 +28,4 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 # Set up work directory
 ADD . /app
 
-RUN composer update --prefer-dist --no-interaction
+RUN composer update --prefer-dist --no-interaction --ignore-platform-req=ext-frankenphp

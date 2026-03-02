@@ -200,12 +200,13 @@ final class FrankenPHPApplicationRunner extends ApplicationRunner
 
             $request = $request->withAttribute('applicationStartTime', $startTime);
 
+            $response = null;
             try {
                 $response = $application->handle($request);
             } catch (Throwable $throwable) {
                 $handler = new ThrowableHandler($throwable);
                 /**
-                 * @var $response ResponseInterface
+                 * @var ResponseInterface $response
                  * @psalm-suppress MixedMethodCall
                  */
                 $response = $container
@@ -213,7 +214,9 @@ final class FrankenPHPApplicationRunner extends ApplicationRunner
                     ->process($request, $handler);
 
             } finally {
-                $emitter->emit($response);
+                if ($response !== null) {
+                    $emitter->emit($response);
+                }
                 $this->afterRespond($application, $container, $response);
                 return true;
             }
@@ -236,7 +239,7 @@ final class FrankenPHPApplicationRunner extends ApplicationRunner
     {
         return $this->temporaryErrorHandler ??
             new ErrorHandler(
-                $this->logger ?? new NullLogger(),
+                new NullLogger(),
                 new HtmlRenderer(),
             );
     }
