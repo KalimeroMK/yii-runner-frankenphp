@@ -41,7 +41,8 @@ ignore_user_abort(true);
  */
 final class FrankenPHPApplicationRunner extends ApplicationRunner
 {
-
+    /** @var callable|null Test hook to mock frankenphp_handle_request locally */
+    public static $handleRequestHook = null;
     private readonly EmitterInterface $emitter;
     private ?FakeEmitter $fakeEmitter = null;
 
@@ -226,7 +227,10 @@ final class FrankenPHPApplicationRunner extends ApplicationRunner
         $maxRequests = (int)($_SERVER['MAX_REQUESTS'] ?? 0);
 
         for ($nbRequests = 0; !$maxRequests || $nbRequests < $maxRequests; ++$nbRequests) {
-            $keepRunning = frankenphp_handle_request($handler);
+            $keepRunning = static::$handleRequestHook !== null
+                ? (static::$handleRequestHook)($handler)
+                : frankenphp_handle_request($handler);
+
             if (!$keepRunning) {
                 break;
             }

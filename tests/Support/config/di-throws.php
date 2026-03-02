@@ -66,10 +66,7 @@ return [
                                 ServerRequestInterface $request,
                                 RequestHandlerInterface $handler
                             ): ResponseInterface {
-                                if ($request->getMethod() === 'EXCEPTION_TEST') {
-                                    throw new \RuntimeException('Simulated application exception during handle()');
-                                }
-                                return (new Response())->withBody((new StreamFactory())->createStream('OK'));
+                                throw new \RuntimeException('Simulated application exception during handle()');
                             }
                         },
                     ]);
