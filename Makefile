@@ -20,5 +20,5 @@ test:		## Run tests. Params: {{ v=8.1 }}. Default latest PHP 8.1
 
 mutation:	## Run mutation tests. Params: {{ v=8.1 }}. Default latest PHP 8.1
 	PHP_VERSION=$(filter-out $@,$(v)) docker compose build --pull yii-runner-frankenphp
-	PHP_VERSION=$(filter-out $@,$(v)) docker compose run yii-runner-frankenphp vendor/bin/roave-infection-static-analysis-plugin -j2 --ignore-msi-with-no-mutations --only-covered
+	PHP_VERSION=$(filter-out $@,$(v)) docker compose run yii-runner-frankenphp vendor/bin/infection -j2 --ignore-msi-with-no-mutations --only-covering-test-cases
 	make down

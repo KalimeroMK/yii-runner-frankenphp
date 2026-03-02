@@ -11,3 +11,4 @@ services:
         PHP_VERSION: ${PHP_VERSION:-8.2}
     volumes:
       - .:/app
+      - /app/vendor

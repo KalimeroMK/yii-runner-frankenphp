@@ -8,6 +8,7 @@ RUN apt update && apt -y install \
 
 # Install PHP extensions
 RUN install-php-extensions \
+    pcov \
     opcache \
     mbstring \
     intl \
