@@ -81,6 +81,9 @@
             "infection/extension-installer": true,
             "composer/package-versions-deprecated": true,
             "yiisoft/config": true
+        },
+        "platform": {
+            "php": "8.1.0"
         }
     },
     "scripts": {

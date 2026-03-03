@@ -1,3 +1,14 @@
 {
-
+    "symbol-whitelist": [
+        "frankenphp_handle_request"
+    ],
+    "php-core-extensions": [
+        "Core",
+        "json",
+        "pcre",
+        "Phar",
+        "Reflection",
+        "SPL",
+        "random"
+    ]
 }

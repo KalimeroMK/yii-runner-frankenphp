@@ -31,3 +31,5 @@ jobs:
         ['ubuntu-latest']
       php: >-
         ['8.4']
+      extensions: >-
+        frankenphp
