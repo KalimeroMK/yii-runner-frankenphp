@@ -1,0 +1,9 @@
+parameters:
+    level: 4
+    paths:
+        - src
+    scanFiles:
+        - stubs/frankenphp.php
+    ignoreErrors:
+        - '#Strict comparison using !== between array and false will always evaluate to true#'
+        - '#Parameter \&\$files by-ref type of method#'
