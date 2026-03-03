@@ -35,6 +35,8 @@ jobs:
     steps:
       - name: Checkout.
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install PHP with extensions.
         uses: shivammathur/setup-php@v2
@@ -45,8 +47,8 @@ jobs:
           coverage: none
           tools: composer:v2
 
-      - name: Install dependencies with composer.
-        run: composer update --no-interaction --no-progress --optimize-autoloader --ansi --ignore-platform-req=ext-frankenphp
+      - name: Install roave-backward-compatibility-check.
+        run: composer global require roave/backward-compatibility-check --no-interaction --no-progress
 
       - name: Run roave backward compatibility check.
-        run: vendor/bin/roave-backward-compatibility-check
+        run: ~/.composer/vendor/bin/roave-backward-compatibility-check
