@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
-
+use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
@@ -154,9 +154,13 @@ final class RequestFactory
     {
         /** @psalm-var array<string, string> $_SERVER */
 
-        if (function_exists('getallheaders') && ($headers = getallheaders()) !== false) {
-            /** @psalm-var array<string, string> $headers */
-            return $headers;
+        if (function_exists('getallheaders')) {
+            $headers = getallheaders();
+            // @phpstan-ignore-next-line
+            if (is_array($headers)) {
+                /** @psalm-var array<string, string> $headers */
+                return $headers;
+            }
         }
 
         $headers = [];
@@ -191,7 +195,7 @@ final class RequestFactory
     /**
      * Populates uploaded files array from $_FILE data structure recursively.
      *
-     * @param array $files Uploaded files array to be populated.
+     * @param array<int, UploadedFileInterface>|UploadedFileInterface $files Uploaded files array to be populated.
      * @param mixed $names File names provided by PHP.
      * @param mixed $tempNames Temporary file names provided by PHP.
      * @param mixed $types File types provided by PHP.
@@ -201,7 +205,7 @@ final class RequestFactory
      * @psalm-suppress MixedArgument, ReferenceConstraintViolation
      */
     private function populateUploadedFileRecursive(
-        array &$files,
+        array|UploadedFileInterface &$files,
         mixed $names,
         mixed $tempNames,
         mixed $types,
@@ -209,10 +213,10 @@ final class RequestFactory
         mixed $errors
     ): void {
         if (is_array($names)) {
-            /** @var array|string $name */
+            /** @var array<array-key, string>|string $name */
             foreach ($names as $i => $name) {
+                /** @phpstan-var array<int, UploadedFileInterface> $files */
                 $files[$i] = [];
-                /** @psalm-suppress MixedArrayAccess */
                 $this->populateUploadedFileRecursive(
                     $files[$i],
                     $name,
