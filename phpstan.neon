@@ -2,7 +2,12 @@ parameters:
     level: 7
     paths:
         - src
+        - tests
     scanFiles:
         - stubs/frankenphp.php
     ignoreErrors:
         - '#Parameter \&\$files by-ref type of method#'
+        - '#Call to method PHPUnit\\Framework\\Assert::assertTrue\(\) with true will always evaluate to true#'
+    excludePaths:
+        - tests/Support/config/*.php
+        - tests/Support/frankenphp.php

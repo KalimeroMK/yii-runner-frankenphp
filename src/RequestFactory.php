@@ -155,8 +155,8 @@ final class RequestFactory
         /** @psalm-var array<string, string> $_SERVER */
 
         if (function_exists('getallheaders')) {
+            /** @var array<array-key, string>|false $headers */
             $headers = getallheaders();
-            // @phpstan-ignore-next-line
             if (is_array($headers)) {
                 /** @psalm-var array<string, string> $headers */
                 return $headers;
