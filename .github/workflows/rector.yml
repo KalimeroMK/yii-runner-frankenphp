@@ -1,5 +1,5 @@
 on:
-  pull_request_target:
+  pull_request:
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -17,10 +17,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          token: ${{ secrets.YIISOFT_GITHUB_TOKEN }}
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
