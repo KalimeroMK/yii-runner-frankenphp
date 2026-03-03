@@ -8,7 +8,9 @@ echo ""
 
 # Install dependencies (must be done after volume mount)
 echo "Installing dependencies..."
-composer install --no-interaction --ignore-platform-req=ext-frankenphp --quiet
+if [ ! -d "vendor" ]; then
+    composer install --no-interaction --ignore-platform-req=ext-frankenphp --quiet
+fi
 
 echo ""
 echo "=== Running PHPUnit ==="
