@@ -246,7 +246,7 @@ final class FrankenPHPApplicationRunner extends ApplicationRunner
     {
         return $this->temporaryErrorHandler ??
             new ErrorHandler(
-                new NullLogger(),
+                $this->logger ?? new NullLogger(),
                 new HtmlRenderer(),
             );
     }
