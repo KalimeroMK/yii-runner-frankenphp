@@ -155,8 +155,8 @@ final class RequestFactory
         /** @psalm-var array<string, string> $_SERVER */
 
         if (function_exists('getallheaders')) {
-            /** @var array<array-key, string>|false $headers */
             $headers = getallheaders();
+            /** @phpstan-ignore function.alreadyNarrowedType */
             if (is_array($headers)) {
                 /** @psalm-var array<string, string> $headers */
                 return $headers;
@@ -195,7 +195,7 @@ final class RequestFactory
     /**
      * Populates uploaded files array from $_FILE data structure recursively.
      *
-     * @param array<int, UploadedFileInterface>|UploadedFileInterface $files Uploaded files array to be populated.
+     * @param array<array-key, UploadedFileInterface|array<array-key, UploadedFileInterface>>|UploadedFileInterface $files Uploaded files array to be populated.
      * @param mixed $names File names provided by PHP.
      * @param mixed $tempNames Temporary file names provided by PHP.
      * @param mixed $types File types provided by PHP.
@@ -205,7 +205,7 @@ final class RequestFactory
      * @psalm-suppress MixedArgument, ReferenceConstraintViolation
      */
     private function populateUploadedFileRecursive(
-        array|UploadedFileInterface &$files,
+        UploadedFileInterface|array &$files,
         mixed $names,
         mixed $tempNames,
         mixed $types,
@@ -215,7 +215,7 @@ final class RequestFactory
         if (is_array($names)) {
             /** @var array<array-key, string>|string $name */
             foreach ($names as $i => $name) {
-                /** @phpstan-var array<int, UploadedFileInterface> $files */
+                /** @phpstan-var array<array-key, UploadedFileInterface|array<array-key, UploadedFileInterface>> $files */
                 $files[$i] = [];
                 $this->populateUploadedFileRecursive(
                     $files[$i],

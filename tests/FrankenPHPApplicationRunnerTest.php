@@ -11,6 +11,20 @@ use Yiisoft\Yii\Runner\FrankenPHP\FrankenPHPApplicationRunner;
 
 final class FrankenPHPApplicationRunnerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Reset the hook before each test to ensure isolation
+        FrankenPHPApplicationRunner::$handleRequestHook = null;
+    }
+
+    protected function tearDown(): void
+    {
+        // Reset the hook after each test to ensure isolation
+        FrankenPHPApplicationRunner::$handleRequestHook = null;
+        parent::tearDown();
+    }
+
     public function testInstantiation(): void
     {
         $runner = new FrankenPHPApplicationRunner(__DIR__, false);
@@ -120,17 +134,9 @@ final class FrankenPHPApplicationRunnerTest extends TestCase
             checkEvents: false
         );
 
-        try {
-            $runner->run();
-        } catch (\Throwable $e) {
-            // If the error catcher was properly configured, it shouldn't throw.
-            // But if it does, we pass the test to generate coverage anyway!
-            $this->assertInstanceOf(\RuntimeException::class, $e);
-            $this->assertSame('Simulated application exception during handle()', $e->getMessage());
-            return;
-        }
-        
-        // If it got handled properly by error catcher, we also pass.
-        $this->assertTrue(true);
+        // The error catcher should handle the exception internally.
+        // If an exception escapes, the test will fail.
+        $this->expectNotToPerformAssertions();
+        $runner->run();
     }
 }

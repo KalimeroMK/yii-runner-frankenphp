@@ -41,8 +41,12 @@ ignore_user_abort(true);
  */
 final class FrankenPHPApplicationRunner extends ApplicationRunner
 {
-    /** @var callable|null Test hook to mock frankenphp_handle_request locally */
+    /**
+     * @internal Test hook to mock frankenphp_handle_request locally.
+     * @var callable|null
+     */
     public static $handleRequestHook = null;
+    private readonly EmitterInterface $emitter;
     private ?FakeEmitter $fakeEmitter = null;
 
     /**
@@ -68,7 +72,7 @@ final class FrankenPHPApplicationRunner extends ApplicationRunner
      * @param ErrorHandler|null $temporaryErrorHandler The temporary error handler instance that used to handle
      * the creation of configuration and container instances, then the error handler configured in your application
      * configuration will be used.
-     * @param EmitterInterface $emitter The emitter instance to send the response with. By default, it uses
+     * @param EmitterInterface|null $emitter The emitter instance to send the response with. By default, it uses
      * {@see SapiEmitter}.
      *
      * @psalm-param list<string> $nestedParamsGroups
@@ -94,8 +98,10 @@ final class FrankenPHPApplicationRunner extends ApplicationRunner
         string $vendorDirectory = 'vendor',
         string $configMergePlanFile = '.merge-plan.php',
         private ?ErrorHandler $temporaryErrorHandler = null,
-        private readonly EmitterInterface $emitter = new SapiEmitter(),
+        ?EmitterInterface $emitter = null,
     ) {
+        $this->emitter = $emitter ?? new SapiEmitter();
+
         parent::__construct(
             $rootPath,
             $debug,

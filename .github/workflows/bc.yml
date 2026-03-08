@@ -25,30 +25,11 @@ name: backwards compatibility
 
 jobs:
   roave_bc_check:
-    name: PHP ${{ matrix.php }}-${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: ['ubuntu-latest']
-        php: ['8.4']
-
-    steps:
-      - name: Checkout.
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Install PHP with extensions.
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: frankenphp
-          ini-values: memory_limit=-1
-          coverage: none
-          tools: composer:v2
-
-      - name: Install roave-backward-compatibility-check.
-        run: composer global require roave/backward-compatibility-check --no-interaction --no-progress
-
-      - name: Run roave backward compatibility check.
-        run: ~/.composer/vendor/bin/roave-backward-compatibility-check
+    uses: yiisoft/actions/.github/workflows/bc.yml@master
+    with:
+      os: >-
+        ['ubuntu-latest']
+      php: >-
+        ['8.4']
+      extensions: >-
+        frankenphp

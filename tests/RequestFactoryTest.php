@@ -126,35 +126,39 @@ final class RequestFactoryTest extends TestCase
         $tempFile = sys_get_temp_dir() . '/test.txt';
         file_put_contents($tempFile, 'test');
         
-        $_FILES = [
-            'file1' => [
-                'name' => 'test.txt',
-                'type' => 'text/plain',
-                'tmp_name' => $tempFile,
-                'error' => UPLOAD_ERR_OK,
-                'size' => 4,
-            ],
-            'nested' => [
-                'name' => ['file2' => 'test2.txt'],
-                'type' => ['file2' => 'text/plain'],
-                'tmp_name' => ['file2' => $tempFile],
-                'error' => ['file2' => UPLOAD_ERR_OK],
-                'size' => ['file2' => 4],
-            ]
-        ];
+        try {
+            $_FILES = [
+                'file1' => [
+                    'name' => 'test.txt',
+                    'type' => 'text/plain',
+                    'tmp_name' => $tempFile,
+                    'error' => UPLOAD_ERR_OK,
+                    'size' => 4,
+                ],
+                'nested' => [
+                    'name' => ['file2' => 'test2.txt'],
+                    'type' => ['file2' => 'text/plain'],
+                    'tmp_name' => ['file2' => $tempFile],
+                    'error' => ['file2' => UPLOAD_ERR_OK],
+                    'size' => ['file2' => 4],
+                ]
+            ];
 
-        $request = $this->requestFactory->create();
-        $files = $request->getUploadedFiles();
+            $request = $this->requestFactory->create();
+            $files = $request->getUploadedFiles();
 
-        $this->assertArrayHasKey('file1', $files);
-        $this->assertSame('test.txt', $files['file1']->getClientFilename());
-        $this->assertSame(4, $files['file1']->getSize());
+            $this->assertArrayHasKey('file1', $files);
+            $this->assertSame('test.txt', $files['file1']->getClientFilename());
+            $this->assertSame(4, $files['file1']->getSize());
 
-        $this->assertArrayHasKey('nested', $files);
-        $this->assertArrayHasKey('file2', $files['nested']);
-        $this->assertSame('test2.txt', $files['nested']['file2']->getClientFilename());
-        
-        unlink($tempFile);
+            $this->assertArrayHasKey('nested', $files);
+            $this->assertArrayHasKey('file2', $files['nested']);
+            $this->assertSame('test2.txt', $files['nested']['file2']->getClientFilename());
+        } finally {
+            if (file_exists($tempFile)) {
+                unlink($tempFile);
+            }
+        }
     }
 
     public function testCreateUriWithHttpsAndPort(): void

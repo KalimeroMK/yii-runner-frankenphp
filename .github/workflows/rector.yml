@@ -1,5 +1,5 @@
 on:
-  pull_request:
+  pull_request_target:
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -13,22 +13,14 @@ name: rector
 
 jobs:
   rector:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          extensions: frankenphp
-          ini-values: memory_limit=-1
-          coverage: none
-          tools: composer:v2
-
-      - name: Install dependencies
-        run: composer update --no-interaction --no-progress --optimize-autoloader --ansi --ignore-platform-req=ext-frankenphp
-
-      - name: Run rector
-        run: vendor/bin/rector process --no-progress-bar --dry-run --ansi
+    uses: yiisoft/actions/.github/workflows/rector.yml@master
+    secrets:
+      token: ${{ secrets.YIISOFT_GITHUB_TOKEN }}
+    with:
+      repository: ${{ github.event.pull_request.head.repo.full_name }}
+      os: >-
+        ['ubuntu-latest']
+      php: >-
+        ['8.1']
+      extensions: >-
+        frankenphp
